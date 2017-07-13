@@ -1,0 +1,28 @@
+{
+  "name": "ejs-renderer",
+  "version": "0.1.0",
+  "description": "Use EJS to render HTML files by reading individual configuration files",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YuhuiCF/ejs-renderer.git"
+  },
+  "author": "Yuhui.Xiong@mcon-group.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YuhuiCF/ejs-renderer/issues"
+  },
+  "homepage": "https://github.com/YuhuiCF/ejs-renderer#readme",
+  "dependencies": {
+    "bluebird": "3.5.0",
+    "ejs": "2.5.6",
+    "fse": "3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "4.2.0",
+    "eslint-config-google": "0.9.1"
+  }
+}
