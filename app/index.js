@@ -1,32 +1,5 @@
 'use strict';
 
-const args = process.argv;
-
-let argsConfigFile;
-let argsConfigFolder;
-let argsDestFolder = './dist/';
-
-args.forEach((val, index) => {
-  if (val === '--configFile' && args[index + 1]) {
-    argsConfigFile = args[index + 1];
-  }
-  if (val === '--configFolder' && args[index + 1]) {
-    argsConfigFolder = args[index + 1];
-  }
-  if (val === '--destFolder' && args[index + 1]) {
-    argsDestFolder = args[index + 1];
-  }
-});
-
-if (
-  !(argsConfigFile && argsConfigFile.length &&
-  argsConfigFolder && argsConfigFolder.length)
-) {
-  return helper
-    .log('Please specify either --argsConfigFile or --argsConfigFolder');
-}
-
-
 const Promise = require('bluebird');
 const ejs = require('ejs');
 const fs = require('fs');
@@ -34,6 +7,16 @@ const fse = require('fs-extra');
 const path = require('path');
 
 const helper = require('./helper');
+const getOptions = require('./getOptions');
+
+
+let {
+  argsContentFile,
+  argsContentFolder,
+  argsDestFolder,
+  argsTemplateFolder,
+} = getOptions();
+
 
 // ejs options
 const options = {};
@@ -41,16 +24,26 @@ const options = {};
 let renderFilePromise = Promise.resolve();
 
 
+/**
+ * @function
+ * @name checkFile
+ * @description check whether the path exists, and whether the given path
+ *    points to a file or not.
+ *    If file exists, then call renderContentFile with the filePath.
+ *    Otherwise, stop the program and indicate the error
+ * @param {string} filePath - path of the target file, relative to
+ *    process.cwd()
+ */
 function checkFile(filePath) {
   fs.stat(filePath, (err, stats) => {
     if (err) {
       helper.log(err);
-      helper.fatal('fs.stat error');
+      helper.fatal('fs.stat error in checkFile()');
     }
 
     if (stats.isFile()) {
       renderFilePromise = renderFilePromise.then(() => {
-        return renderConfigFile(filePath);
+        return renderContentFile(filePath);
       });
     } else {
       helper.fatal(filePath + ' is not a file');
@@ -58,9 +51,20 @@ function checkFile(filePath) {
   });
 }
 
+/**
+ * @function
+ * @name writeToFile
+ * @description check whether the path exists, and whether the given path
+ *    points to a file or not.
+ *    If file exists, then call renderContentFile with the filePath.
+ *    Otherwise, stop the program and indicate the error
+ * @param {string} destFileName - path of the destination file, relative to
+ * @param {string} content - content of the destination file
+ */
 function writeToFile(destFileName, content) {
   return new Promise((resolve) => {
-    const dest = argsDestFolder + destFileName;
+    // const dest = argsDestFolder + destFileName;
+    const dest = path.resolve(process.cwd(), argsDestFolder, destFileName);
     fse.ensureFile(dest, (err) => {
       if (err) {
         helper.log('fse.ensureFile error');
@@ -79,16 +83,18 @@ function writeToFile(destFileName, content) {
   });
 }
 
-function renderConfigFile(configFile) {
+function renderContentFile(contentFile) {
   return new Promise((resolve) => {
-    if (configFile.endsWith('.js')) {
-      configFile = path.resolve(process.cwd(), configFile);
-      const data = require(configFile);
+    if (contentFile.endsWith('.js')) {
+      contentFile = path.resolve(process.cwd(), contentFile);
+      const data = require(contentFile);
 
-      const templateFile = data._templateFile;
+      const templateFile = path.resolve(
+        process.cwd(), argsTemplateFolder, data._templateFile
+      );
 
       if (!templateFile) {
-        helper.fatal('template not defined for file ' + configFile);
+        helper.fatal('template not defined for file ' + contentFile);
       } else {
         ejs.renderFile(templateFile, data, options, (err, str) => {
           if (err) {
@@ -96,13 +102,13 @@ function renderConfigFile(configFile) {
             helper.fatal('ejs.renderFile error');
           }
 
-          fs.stat(configFile, (err) => {
+          fs.stat(contentFile, (err) => {
             if (err) {
               helper.log(err);
-              helper.fatal('fs.stat error');
+              helper.fatal('fs.stat error in renderContentFile');
             }
 
-            let destFileName = configFile.split('/');
+            let destFileName = contentFile.split('/');
             destFileName = destFileName[destFileName.length - 1]
               .replace('.js', '');
             writeToFile(destFileName, str).then(resolve);
@@ -116,17 +122,17 @@ function renderConfigFile(configFile) {
 }
 
 
-if (argsConfigFolder) {
-  fs.readdir(argsConfigFolder, (err, files) => {
+if (argsContentFolder) {
+  fs.readdir(argsContentFolder, (err, files) => {
     if (err) {
       helper.log(err);
       helper.fatal('fs.readdir error');
     }
 
     files.forEach((file) => {
-      checkFile(argsConfigFolder + file);
+      checkFile(path.resolve(process.cwd(), argsContentFolder, file));
     });
   });
-} else if (argsConfigFile) {
-  checkFile(argsConfigFile);
+} else if (argsContentFile) {
+  checkFile(argsContentFile);
 }
