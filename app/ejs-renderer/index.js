@@ -17,7 +17,7 @@ const appModule = {
   argsTemplateFolder: '',
 
   getOptions: require('./getOptions'),
-  helper: require('./helper'),
+  helper: require('../helper'), // TODO: move to each function
 
   renderContentFile,
   start,
