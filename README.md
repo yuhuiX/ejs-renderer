@@ -9,7 +9,7 @@ Add module to your `package.json`
 ```javascript
 // either in devDependencies, or dependencies:
 {
-  "version-patch": "https://github.com/YuhuiCF/version-patch.git" // additionally with #master or #X.XX.XX
+  "ejs-renderer": "https://github.com/YuhuiCF/ejs-renderer.git" // additionally with #master or #X.XX.XX
 }
 ```
 
@@ -18,7 +18,7 @@ If you have a `--contentFile` in `test/integration/content/test.html.js`
 module.exports = {
   _templateFile: 'template.html', // file name of the ejs template for the content
 
-  // other contents
+  // contents for the ejs file
   h1: 'H1',
 };
 ```
