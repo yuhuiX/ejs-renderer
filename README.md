@@ -9,6 +9,28 @@ Add module to your `package.json`
 ```javascript
 // either in devDependencies, or dependencies:
 {
-  "version-patch": "https://github.com/YuhuiCF/version-patch.git"
+  "version-patch": "https://github.com/YuhuiCF/version-patch.git" // additionally with #master or #X.XX.XX
 }
+```
+
+If you have a `--contentFile` in `test/integration/content/test.html.js`
+```javascript
+module.exports = {
+  _templateFile: 'template.html', // file name of the ejs template for the content
+
+  // other contents
+  h1: 'H1',
+};
+```
+
+If your template file `template.html` in `-templateFolder` `test/integration/templates` is simply
+```html
+<h1><%= h1 %></h1>
+```
+
+If you would create the files in the `--destFolder` `test/integration/dist`
+
+Then just run
+```shell
+node app/index.js --contentFile test/integration/content/test.html.js --templateFolder test/integration/templates --destFolder test/integration/dist
 ```
