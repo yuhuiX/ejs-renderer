@@ -1,7 +1,7 @@
 
 # ejs-renderer
 
-Use EJS to render HTML files by reading individual configuration files
+A CLI tool using EJS to render HTML files by reading individual configuration files
 
 ## Usage
 
@@ -13,7 +13,7 @@ Add module to your `package.json`
 }
 ```
 
-If you have a `--contentFile` in `test/integration/content/test.html.js`
+If you have a `--contentFile` `test/integration/content/test.html.js` used to render a file with name `test.html` (content file name withouth the `.js` extension)
 ```javascript
 module.exports = {
   _templateFile: 'template.html', // file name of the ejs template for the content
@@ -28,9 +28,20 @@ If your template file `template.html` in `-templateFolder` `test/integration/tem
 <h1><%= h1 %></h1>
 ```
 
-If you would create the files in the `--destFolder` `test/integration/dist`
+If you would create the files in the `--destFolder` `test/integration/dist` with name `test.html`
 
-Then just run
+Then create a npm script to run, for example
 ```shell
-node app/index.js --contentFile test/integration/content/test.html.js --templateFolder test/integration/templates --destFolder test/integration/dist
+npm run renderHtml
+```
+where the npm script renderHtml is
+```javascript
+{
+  "renderHtml": "ejs-renderer --contentFile test/integration/content/test.html.js --templateFolder test/integration/templates --destFolder test/integration/dist"
+}
+```
+
+If rendering all files from a content folder, then use `--contentFolder`
+```shell
+ejs-renderer --contentFolder test/integration/content --templateFolder test/integration/templates --destFolder test/integration/dist
 ```
