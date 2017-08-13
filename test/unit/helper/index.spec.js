@@ -1,10 +1,7 @@
 'use strict';
 
-const util = {
-  log: jasmine.createSpy(),
-};
-
-const helper = require('../path').mocked.helper(util);
+const console = require('../modules').mocked.console();
+const helper = require('../modules').mocked.helper();
 
 describe('helper module ->', () => {
   describe('could fatal()', () => {
@@ -29,6 +26,6 @@ describe('helper module ->', () => {
 
   it('could log()', () => {
     helper.log('message');
-    expect(util.log).toHaveBeenCalledWith('message');
+    expect(console.log).toHaveBeenCalledWith('message');
   });
 });

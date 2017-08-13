@@ -1,6 +1,7 @@
 'use strict';
 
 const helper = require('../helper');
+const argv = require('minimist')(process.argv.slice(2));
 
 module.exports = getOptions;
 
@@ -9,53 +10,37 @@ module.exports = getOptions;
  * @function
  * @name getOptions
  * @description get app parameter values for
- *    --contentFile ,
- *    --contentFolder ,
- *    --destFolder ,
- *    --templateFolder ,
+ *    -i, --input
+ *    -o, --output
+ *    -t, --templateFolder ,
  * @return {object} obj
  */
 function getOptions() {
-  let {
-    argsContentFile,
-    argsContentFolder,
-    argsDestFolder,
-    argsTemplateFolder,
-  } = {};
+  let argsInput = argv.i || argv.input;
+  let argsOutput = argv.o || argv.output;
+  let argsTemplateFolder = argv.t || argv.templateFolder;
 
-  const args = process.argv;
-  args.forEach((val, index) => {
-    if (val === '--contentFile' && args[index + 1]) {
-      argsContentFile = args[index + 1];
-    }
-    if (val === '--contentFolder' && args[index + 1]) {
-      argsContentFolder = args[index + 1];
-    }
-    if (val === '--destFolder' && args[index + 1]) {
-      argsDestFolder = args[index + 1];
-    }
-    if (val === '--templateFolder' && args[index + 1]) {
-      argsTemplateFolder = args[index + 1];
-    }
-  });
+  const errorMessages = [];
 
-  if (
-    !(
-      (
-        argsContentFile && argsContentFile.length ||
-        argsContentFolder && argsContentFolder.length
-      ) &&
-      argsDestFolder && argsDestFolder.length &&
-      argsTemplateFolder && argsTemplateFolder.length
-    )
-  ) {
+  if (!argsInput) {
+    errorMessages.push('Please provide -i or --input for input folder/file');
+  }
+  if (!argsOutput) {
+    errorMessages.push('Please provide -o or --output for output folder');
+  }
+  if (!argsTemplateFolder) {
+    errorMessages.push(
+      'Please provide -t or --templateFolder to indicate the template folder'
+    );
+  }
+
+  if (errorMessages.length) {
     return helper
-      .fatal('Please specify either --argsContentFile or --argsContentFolder');
+      .fatal(errorMessages.join('; '));
   } else {
     return {
-      argsContentFile,
-      argsContentFolder,
-      argsDestFolder,
+      argsInput,
+      argsOutput,
       argsTemplateFolder,
     };
   }

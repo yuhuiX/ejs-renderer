@@ -1,2 +1,16 @@
+<%
+// treat undefined variables
+if (typeof(h2) === 'undefined') {
+  h2 = false;
+}
+%>
 
 <h1><%= h1 %></h1>
+
+<%
+if (h2) {
+%>
+<h2><%= h2 %></h2>
+<%
+}
+%>

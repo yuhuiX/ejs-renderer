@@ -10,7 +10,13 @@ module.exports = (appModule) => {
    */
   return (obj) => {
     Object.keys(obj).forEach((arg) => {
-      appModule[arg] = obj[arg];
+      const value = obj[arg];
+      appModule[arg] = value;
+      if (arg === 'argsInput') {
+        appModule.treatArgsInput(value);
+      } else if (arg === 'argsOutput') {
+        appModule.argsDestFolder = value;
+      }
     });
   };
 };

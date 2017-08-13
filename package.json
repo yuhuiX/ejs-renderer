@@ -4,9 +4,13 @@
   "description": "Use EJS to render HTML files by reading individual configuration files",
   "main": "app/index.js",
   "scripts": {
-    "jasmine": "jasmine JASMINE_CONFIG_PATH=./jasmine.json",
-    "nyc": "nyc npm run jasmine",
-    "test": "npm run nyc"
+    "jasmine:unit": "jasmine JASMINE_CONFIG_PATH=./test/unit/jasmine.json",
+    "nyc:integration": "nyc --report-dir ./coverage/integration bash integration-test.sh || true",
+    "nyc:unit": "nyc npm run jasmine:unit",
+    "pretest": "rm -rf ./coverage",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:integration": "npm run nyc:integration",
+    "test:unit": "npm run nyc:unit"
   },
   "repository": {
     "type": "git",
@@ -27,7 +31,7 @@
     "include": [
       "**/app/**"
     ],
-    "report-dir": "./coverage",
+    "report-dir": "./coverage/unit",
     "reporter": [
       "lcov",
       "text-summary"
@@ -36,7 +40,8 @@
   "dependencies": {
     "bluebird": "3.5.0",
     "ejs": "2.5.6",
-    "fs-extra": "4.0.0"
+    "fs-extra": "4.0.0",
+    "minimist": "1.2.0"
   },
   "devDependencies": {
     "eslint": "4.2.0",
