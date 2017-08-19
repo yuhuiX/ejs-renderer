@@ -7,7 +7,7 @@
     "jasmine:integration": "jasmine JASMINE_CONFIG_PATH=./test/integration/jasmine.json",
     "jasmine:unit": "jasmine JASMINE_CONFIG_PATH=./test/unit/jasmine.json",
     "prejsdoc": "rm -rf ./docs",
-    "jsdoc": "jsdoc ./test ./app -r -d docs/",
+    "jsdoc": "jsdoc -c ./.jsdoc.js ./test ./app -r -d docs/",
     "nyc:integration": "nyc --report-dir ./coverage/integration npm run jasmine:integration",
     "nyc:unit": "nyc npm run jasmine:unit",
     "pretest": "rm -rf ./coverage",
