@@ -48,3 +48,7 @@ where the npm script renderHtml is
   "renderHtml": "ejs-renderer --input test/integration/content/test.html.js --templateDirectory test/integration/templates --output test/integration/dist"
 }
 ```
+
+## Documentation
+
+[Link](https://yuhuicf.github.io/ejs-renderer/tests.html) for integration tests, even usage examples
