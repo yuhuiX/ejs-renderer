@@ -4,9 +4,16 @@
   "description": "Use EJS to render HTML files by reading individual configuration files",
   "main": "app/index.js",
   "scripts": {
-    "jasmine": "jasmine JASMINE_CONFIG_PATH=./jasmine.json",
-    "nyc": "nyc npm run jasmine",
-    "test": "npm run nyc"
+    "jasmine:integration": "jasmine JASMINE_CONFIG_PATH=./test/integration/jasmine.json",
+    "jasmine:unit": "jasmine JASMINE_CONFIG_PATH=./test/unit/jasmine.json",
+    "prejsdoc": "rm -rf ./docs",
+    "jsdoc": "jsdoc ./test ./app -r -d docs/",
+    "nyc:integration": "nyc --report-dir ./coverage/integration npm run jasmine:integration",
+    "nyc:unit": "nyc npm run jasmine:unit",
+    "pretest": "rm -rf ./coverage",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:integration": "npm run nyc:integration",
+    "test:unit": "npm run nyc:unit"
   },
   "repository": {
     "type": "git",
@@ -19,15 +26,11 @@
   },
   "homepage": "https://github.com/YuhuiCF/ejs-renderer#readme",
   "nyc": {
-    "all": true,
     "cache": true,
     "exclude": [
       "**/node_modules/**"
     ],
-    "include": [
-      "**/app/**"
-    ],
-    "report-dir": "./coverage",
+    "report-dir": "./coverage/unit",
     "reporter": [
       "lcov",
       "text-summary"
@@ -36,16 +39,25 @@
   "dependencies": {
     "bluebird": "3.5.0",
     "ejs": "2.5.6",
-    "fs-extra": "4.0.0"
+    "fs-extra": "4.0.0",
+    "minimist": "1.2.0"
   },
   "devDependencies": {
     "eslint": "4.2.0",
     "eslint-config-google": "0.9.1",
     "jasmine": "2.6.0",
+    "jasmine-spec-reporter": "4.2.1",
+    "jsdoc": "3.5.4",
     "nyc": "11.0.3",
     "proxyquire": "1.8.0"
   },
   "bin": {
     "ejs-renderer": "./bin/ejs-renderer"
-  }
+  },
+  "keywords": [
+    "ejs",
+    "render",
+    "html",
+    "template"
+  ]
 }

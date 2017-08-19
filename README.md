@@ -3,6 +3,14 @@
 
 A CLI tool using EJS to render HTML files by reading individual configuration files
 
+## Options
+
+Option long | short | Description
+--- | --- | ---
+`--input` | `-i` | file or directory where the content configurations are defined
+`--templateDirectory` | `-t` | directory where the templates are defined
+`--output` | `-o` | directory where the content files are exported
+
 ## Usage
 
 Add module to your `package.json`
@@ -13,7 +21,7 @@ Add module to your `package.json`
 }
 ```
 
-If you have a `--contentFile` `test/integration/content/test.html.js` used to render a file with name `test.html` (content file name withouth the `.js` extension)
+If you have a `--input` `test/integration/content/test.html.js` used to render a file with name `test.html` (content file name withouth the `.js` extension)
 ```javascript
 module.exports = {
   _templateFile: 'template.html', // file name of the ejs template for the content
@@ -23,12 +31,12 @@ module.exports = {
 };
 ```
 
-If your template file `template.html` in `-templateFolder` `test/integration/templates` is simply
+If your template file `template.html` in `--templateDirectory` `test/integration/templates` is simply
 ```html
 <h1><%= h1 %></h1>
 ```
 
-If you would create the files in the `--destFolder` `test/integration/dist` with name `test.html`
+If you would create the files in the `--output` `test/integration/dist` with name `test.html`
 
 Then create a npm script to run, for example
 ```shell
@@ -37,11 +45,6 @@ npm run renderHtml
 where the npm script renderHtml is
 ```javascript
 {
-  "renderHtml": "ejs-renderer --contentFile test/integration/content/test.html.js --templateFolder test/integration/templates --destFolder test/integration/dist"
+  "renderHtml": "ejs-renderer --input test/integration/content/test.html.js --templateDirectory test/integration/templates --output test/integration/dist"
 }
-```
-
-If rendering all files from a content folder, then use `--contentFolder`
-```shell
-ejs-renderer --contentFolder test/integration/content --templateFolder test/integration/templates --destFolder test/integration/dist
 ```

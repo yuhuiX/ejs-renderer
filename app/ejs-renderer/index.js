@@ -26,6 +26,7 @@ const appModule = {
 
 appModule.checkFile = require('./checkFile')(appModule);
 appModule.setArgs = require('./setArgs')(appModule);
+appModule.treatArgsInput = require('./treatArgsInput')(appModule);
 
 module.exports = appModule;
 
@@ -34,22 +35,23 @@ module.exports = appModule;
  * @function
  * @name renderContentFile
  * @description render the content file, to the destination directory
- * @param {string} contentFile - path of the destination file, relative to
- *    process.cwd()
+ * @param {string} contentFileAbsPath - absolute path of the content file
+ * @param {string} contentFilePath - path of the destination file, relative to
+ *    destination directory
  * @return {Promise}
  */
-function renderContentFile(contentFile) {
+function renderContentFile(contentFileAbsPath, contentFilePath) {
   return new Promise((resolve) => {
-    if (contentFile.endsWith('.js')) {
-      contentFile = path.resolve(process.cwd(), contentFile);
-      const data = require(contentFile);
+    // TODO: function checkFileExtension
+    if (contentFileAbsPath.endsWith('.js')) {
+      const data = require(contentFileAbsPath);
 
       const templateFile = path.resolve(
         process.cwd(), appModule.argsTemplateFolder, data._templateFile
       );
 
       if (!templateFile) {
-        appModule.helper.fatal('template not defined for file ' + contentFile);
+        appModule.helper.fatal('template not defined for file ' + templateFile);
       } else {
         ejs.renderFile(templateFile, data, options, (err, str) => {
           if (err) {
@@ -57,21 +59,12 @@ function renderContentFile(contentFile) {
             appModule.helper.fatal('ejs.renderFile error');
           }
 
-          fs.stat(contentFile, (err) => {
-            if (err) {
-              appModule.helper.log(err);
-              appModule.helper.fatal('fs.stat error in renderContentFile');
-            }
-
-            let destFileName = contentFile.split('/');
-            destFileName = destFileName[destFileName.length - 1]
-              .replace('.js', '');
-            appModule.writeToFile(destFileName, str).then(resolve);
-          });
+          const destFileName = contentFilePath.replace(/.js$/, '');
+          appModule.writeToFile(destFileName, str).then(resolve);
         });
       }
     } else {
-      appModule.helper.fatal(`extension of ${contentFile} is not .js`);
+      appModule.helper.error(`extension of ${contentFileAbsPath} is not .js`);
     }
   });
 }
@@ -95,14 +88,21 @@ function start() {
         appModule.helper.fatal('fs.readdir error');
       }
 
+      let checkFilePromise = Promise.resolve();
       files.forEach((file) => {
-        appModule.checkFile(path.resolve(
-          process.cwd(), appModule.argsContentFolder, file
-        ));
+        checkFilePromise = checkFilePromise.then(() => {
+          return appModule.checkFile(path.resolve(
+            process.cwd(), appModule.argsContentFolder
+          ), file);
+        });
       });
     });
   } else if (appModule.argsContentFile) {
-    appModule.checkFile(appModule.argsContentFile);
+    appModule.checkFile(path.resolve(
+      process.cwd(), path.dirname(appModule.argsContentFile)
+    ), path.basename(appModule.argsContentFile));
+  } else {
+    appModule.helper.fatal('fs.readdir error');
   }
 }
 

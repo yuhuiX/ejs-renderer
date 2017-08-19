@@ -1,10 +1,15 @@
 'use strict';
 
-const util = require('util');
+const {error, log} = require('../global/console');
 
 const helperModule = {
+  error: (...args) => {
+    return error(...args);
+  },
   fatal,
-  log,
+  log: (...args) => {
+    return log(...args);
+  },
 };
 
 module.exports = helperModule;
@@ -22,15 +27,4 @@ function fatal(message) {
     helperModule.log(message);
   }
   process.exit(1);
-}
-
-/**
- * @function
- * @name log
- * @description log a message
- * @param {string} message - message to be displayed
- * @return {undefined}
- */
-function log(message) {
-  util.log(message);
 }

@@ -4,7 +4,7 @@ const app = {
   start: jasmine.createSpy(),
 };
 
-require('./path').mocked.index(app);
+require('./modules').mocked.index(app);
 
 describe('app entry', () => {
   it('should start the application', () => {
