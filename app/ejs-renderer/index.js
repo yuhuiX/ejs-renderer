@@ -64,7 +64,7 @@ function renderContentFile(contentFileAbsPath, contentFilePath) {
         });
       }
     } else {
-      appModule.helper.fatal(`extension of ${contentFileAbsPath} is not .js`);
+      appModule.helper.error(`extension of ${contentFileAbsPath} is not .js`);
     }
   });
 }

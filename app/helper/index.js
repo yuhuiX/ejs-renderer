@@ -1,8 +1,11 @@
 'use strict';
 
-const {log} = require('../global/console');
+const {error, log} = require('../global/console');
 
 const helperModule = {
+  error: (...args) => {
+    return error(...args);
+  },
   fatal,
   log: (...args) => {
     return log(...args);

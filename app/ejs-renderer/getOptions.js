@@ -12,13 +12,13 @@ module.exports = getOptions;
  * @description get app parameter values for
  *    -i, --input
  *    -o, --output
- *    -t, --templateFolder ,
+ *    -t, --templateDirectory ,
  * @return {object} obj
  */
 function getOptions() {
   let argsInput = argv.i || argv.input;
   let argsOutput = argv.o || argv.output;
-  let argsTemplateFolder = argv.t || argv.templateFolder;
+  let argsTemplateFolder = argv.t || argv.templateDirectory;
 
   const errorMessages = [];
 
@@ -30,7 +30,7 @@ function getOptions() {
   }
   if (!argsTemplateFolder) {
     errorMessages.push(
-      'Please provide -t or --templateFolder to indicate the template folder'
+      'Please provide -t or --templateDirectory to indicate the template folder'
     );
   }
 
