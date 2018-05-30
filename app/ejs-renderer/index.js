@@ -6,6 +6,9 @@ const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
 
+const getTemplateFileFromContent = require('./getTemplateFileFromObj');
+const {fatal} = require('../helper');
+
 // ejs options
 const options = {};
 
@@ -45,9 +48,16 @@ function renderContentFile(contentFileAbsPath, contentFilePath) {
     // TODO: function checkFileExtension
     if (contentFileAbsPath.endsWith('.js')) {
       const data = require(contentFileAbsPath);
+      const relativeTemplateFile = getTemplateFileFromContent(data);
+
+      if (!relativeTemplateFile) {
+        fatal(`no templateFile found in ${JSON.stringify(data)}`);
+      }
 
       const templateFile = path.resolve(
-        process.cwd(), appModule.argsTemplateFolder, data._templateFile
+        process.cwd(),
+        appModule.argsTemplateFolder,
+        relativeTemplateFile
       );
 
       if (!templateFile) {
