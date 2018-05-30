@@ -1,6 +1,6 @@
 {
   "name": "ejs-renderer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Use EJS to render HTML files by reading individual configuration files",
   "main": "app/index.js",
   "scripts": {
