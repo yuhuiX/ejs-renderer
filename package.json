@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YuhuiCF/ejs-renderer.git"
+    "url": "git+https://github.com/yuhuiX/ejs-renderer.git"
   },
   "author": "Yuhui.Xiong@mcon-group.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/YuhuiCF/ejs-renderer/issues"
+    "url": "https://github.com/yuhuiX/ejs-renderer/issues"
   },
-  "homepage": "https://github.com/YuhuiCF/ejs-renderer#readme",
+  "homepage": "https://github.com/yuhuiX/ejs-renderer#readme",
   "nyc": {
     "cache": true,
     "exclude": [
